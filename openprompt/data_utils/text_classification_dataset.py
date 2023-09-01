@@ -350,6 +350,30 @@ class SST2Processor(DataProcessor):
                 examples.append(example)
         return examples
 
+######################################################################################################################
+class ToxicityProcessor(DataProcessor):
+    def __init__(self):
+        super().__init__()
+        self.labels = ['0', '1']
+
+    def get_examples(self, data_dir, split):
+        path = os.path.join(data_dir, "{}.csv".format(split))
+        examples = []
+        with open(path, encoding='utf8') as f:
+            reader = csv.reader(f, delimiter=',')  
+            for row in reader:
+                guid, text_a, label = row
+                example = InputExample(
+                    guid=guid,
+                    text_a=text_a,
+                    label=int(label)
+                )
+                examples.append(example)
+        return examples
+
+########################################################################################################################
+
+
 PROCESSORS = {
     "agnews": AgnewsProcessor,
     "dbpedia": DBpediaProcessor,
@@ -358,4 +382,5 @@ PROCESSORS = {
     "sst-2": SST2Processor,
     "mnli": MnliProcessor,
     "yahoo": YahooProcessor,
+    "toxicity": ToxicityProcessor,
 }
